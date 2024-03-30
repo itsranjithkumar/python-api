@@ -1,22 +1,37 @@
 
 from argparse import OPTIONAL
 
+from collections import UserDict
+
 from operator import index
 from typing import Optional
+from click import password_option
 from fastapi import Body, FastAPI,Response,status,HTTPException
 from fastapi.params import Body
+import psycopg2
 from pydantic import BaseModel
 from random import randrange
-
+from psycopg2.extras import RealDictCursor
+import time
 
 app = FastAPI()
 
 class post(BaseModel):
     title: str
-    content: str
+    content: str 
     published: bool = True
-    rating: Optional [int] = None 
+    
+while True:
 
+    try:
+        conn = psycopg2.connect(host='localhost', database= 'postgres', user = 'postgres',password='password', cursor_factory=RealDictCursor )
+        cursor = conn.cursor()
+        print("database connection was succesfull!")
+        break
+    except Exception as error:
+        print("connection to database failed")
+        print ("error:", error)
+        time.sleep(2)
 
    
 
@@ -35,19 +50,20 @@ def find_index_post(id):
 
 @app.get("/")
 def root():
-
     return {"message": "Hello World"}
 
 @app.get("/posts")
 def get_posts():
-    return{"data": my_posts}
+    cursor.execute("""SELECT * FROM posts """)
+    posts = cursor.fetchall()
+    
+    return{"data": posts}
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_posts(post:post):
-    post_dict = post.dict()
-    post_dict["id"] = randrange(0, 1000000) 
-    my_posts.append(post_dict)
-    return {"data":post_dict}
+    
+    cursor.execute("""INSERT INTO POSTS (title, content, published) values(%s,%s,%s)""",(post.title, post.content,post.published))
+    return {"data":"created post"}
 
 
 @app.get("/posts/{id}")
