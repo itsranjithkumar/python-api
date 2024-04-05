@@ -1,7 +1,6 @@
 from fastapi import Body, Depends, FastAPI,Response,status,HTTPException, APIRouter,Depends
 from sqlalchemy.orm import Session
 from.. import schemas, database, models, oauth2
-from models import *
 
 
 
@@ -13,7 +12,7 @@ router = APIRouter(
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def vote(votes: schemas.Vote,db: Session = Depends (database.get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    db.query(models.post).filter(models.post.id == votes.post_id).first()
+    post=db.query(models.post).filter(models.post.id == votes.post_id).first()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {votes.post_id} does not exist")
 

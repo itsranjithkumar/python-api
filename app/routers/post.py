@@ -6,6 +6,7 @@ from app import oauth2
 from .. import models, schemas, oauth2
 from ..database import get_db
 from operator import index
+from sqlalchemy import func
 
 
 router = APIRouter(
@@ -21,17 +22,21 @@ def test_post(db: Session = Depends(get_db)):
     print(posts)
     return {"data": "successfull"}
 
-@router.get("/", response_model= list [schemas.post])
+# @router.get("/", response_model= list [schemas.post])
+@router.get("/")
 def get_posts(db: Session = Depends (get_db), current_user : int = Depends(oauth2.get_current_user),
 limit: int = 10, skip: int = 0, search: Optional [str] = ""):
     #cursor.execute("""SELECT * FROM posts """)
     #posts = cursor.fetchall() 
+   
     print(search)
-    
     posts = db.query(models.post).filter(models.post.title.contains(search)).limit(limit).offset(skip).all()
 
+    results = db.query(models.post, func.count(models.Votes.post_id).label("votes")).join(models.Votes, models.Votes.post_id == models.post.id, isouter=True).group_by(models.post.id).all()
    
-    return posts
+
+   
+    return results
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model = schemas.post)
 def create_posts(post: schemas.postCreate, db: Session = Depends(get_db), current_user :  int = Depends(oauth2.get_current_user)):
