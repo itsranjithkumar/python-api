@@ -9,8 +9,9 @@ from .config import settings
 
 
 
-SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@
-{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
+SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
+print(SQLALCHEMY_DATABASE_URL)
+print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
@@ -26,14 +27,14 @@ def get_db():
         db.close()
 
 
-while True:
+# while True:
 
-    try:
-        conn = psycopg2.connect(host='localhost', database= 'fastapi', user = 'postgres',password='password', cursor_factory=RealDictCursor )
-        cursor = conn.cursor()
-        print("database connection was succesfull!")
-        break
-    except Exception as error:
-        print("connection to database failed")
-        print ("error:", error)
-        time.sleep(2)
+#     try:
+#         conn = psycopg2.connect(host='localhost', database= 'fastapi', user = 'postgres',password='password', cursor_factory=RealDictCursor )
+#         cursor = conn.cursor()
+#         print("database connection was succesfull!")
+#         break
+#     except Exception as error:
+#         print("connection to database failed")
+#         print ("error:", error)
+#         time.sleep(2)
