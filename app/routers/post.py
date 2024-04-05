@@ -1,3 +1,4 @@
+import json
 from fastapi import Body, Depends, FastAPI,Response,status,HTTPException, APIRouter,Depends
 from  sqlalchemy.orm import Session
 from typing import List
@@ -30,13 +31,17 @@ limit: int = 10, skip: int = 0, search: Optional [str] = ""):
     #posts = cursor.fetchall() 
    
     print(search)
+    print("aaaaaaaaaaaaaaaaaa")
     posts = db.query(models.post).filter(models.post.title.contains(search)).limit(limit).offset(skip).all()
+    print("bbbbbbbbbbbbbbbbbbbb")
 
-    results = db.query(models.post, func.count(models.Votes.post_id).label("votes")).join(models.Votes, models.Votes.post_id == models.post.id, isouter=True).group_by(models.post.id).all()
+    results = db.query(models.post, func.count(models.Votes.post_id).label("votes")).join(models.Votes, models.Votes.post_id == models.post.id, isouter=True).group_by(models.post.id).first()
+    print("cccccccccccccccccc")
+    print(results)
    
 
    
-    return results
+    return results[0]
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model = schemas.post)
 def create_posts(post: schemas.postCreate, db: Session = Depends(get_db), current_user :  int = Depends(oauth2.get_current_user)):
