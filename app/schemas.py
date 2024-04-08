@@ -23,8 +23,18 @@ class UserOut(BaseModel):
     
 class config:
     orm_mode = True
-
+ 
 class post(postBase):
+    id: int
+    created_at: datetime
+    owner_id: int
+    owner: UserOut
+
+    class config:
+        orm_mode = True
+
+
+class postOut(postBase):
     id: int 
     created_at: datetime
     owner_id: int
@@ -32,6 +42,15 @@ class post(postBase):
 
 class config:
     orm_mode = True
+
+
+
+class User(BaseModel):
+    post: post
+    votes: int
+
+    class config:
+        orm_mode = True
 
 
 class UserCreate(BaseModel):
