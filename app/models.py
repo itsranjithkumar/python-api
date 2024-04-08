@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship
 
 class post(Base):
     __tablename__ = "posts"
+    
 
     id = Column(Integer, primary_key=True, nullable=False)
     title = Column (String, nullable=False)
@@ -24,6 +25,7 @@ class User(Base):
     email = Column(String, nullable=False, unique=True )
     password = Column(String, nullable=False) 
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+   
 
 
 class Votes(Base):

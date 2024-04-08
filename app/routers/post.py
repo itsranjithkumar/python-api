@@ -32,10 +32,11 @@ limit: int = 10, skip: int = 0, search: Optional [str] = ""):
    
     print(search)
     print("aaaaaaaaaaaaaaaaaa")
-    posts = db.query(models.post).filter(models.post.title.contains(search)).limit(limit).offset(skip).all()
+    # posts = db.query(models.post).filter(models.post.title.contains(search)).limit(limit).offset(skip).all()
     print("bbbbbbbbbbbbbbbbbbbb")
 
-    results = db.query(models.post, func.count(models.Votes.post_id).label("votes")).join(models.Votes, models.Votes.post_id == models.post.id, isouter=True).group_by(models.post.id).first()
+    posts = db.query(models.post, func.count(models.Votes.post_id).label("votes")).join(models.Votes, models.Votes.post_id == models.post.id, isouter=True).group_by(models.post.id).filter
+    (models.post.title.contains(search)).limit(limit).offset(skip).all()
     print("cccccccccccccccccc")
    
    
@@ -61,13 +62,15 @@ def create_posts(post: schemas.postCreate, db: Session = Depends(get_db), curren
     return  new_post
   
 
-@router.get("/{id}", response_model=schemas.post)
+@router.get("/{id}", response_model=schemas.postOut)
 def get_post(id:int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
    # cursor.execute("""SELECT *from posts WHERE id = %s""",(str(id)))
    # post = cursor.fetchone()
-    post = db.query(models.post).filter(models.post.id ==id).first()
-    
+    # post = db.query(models.post).filter(models.post.id ==id).first()
+     
+    post = db.query(models.post, func.count(models.Votes.post_id).label("votes")).join(models.Votes, models.Votes.post_id == models.post.id, isouter=True).group_by(models.post.id).filter(models.post.id ==id).first()
 
+    
     if not post:
         
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
