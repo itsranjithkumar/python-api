@@ -6,23 +6,33 @@ from urllib import response
 from webbrowser import get
 from click import password_option
 from fastapi import Body, Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from . import models
 from .database import engine
 from .routers import post, user, auth, vote
 from.config import settings
  
 print(settings.database_username)
-models.Base.metadata.create_all(bind=engine)
+
+# models.Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI()
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 
 # class post(BaseModel):
 #     title: str
 #     content: str 
 #     published: bool = True  
-    
+)   
         
 app.include_router(post.router)  
 app.include_router(user.router)  
