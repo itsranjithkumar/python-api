@@ -41,7 +41,7 @@ app.include_router(vote.router)
 
 @app.get("/")
 def root():
-    return {"message": "Hello World pushing "}
+    return {"message": "blind mount works!!! sort"}
 
 # @app.get("/sqlalchemy")
 # def test_post(db: Session = Depends(get_db)):

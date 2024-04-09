@@ -1,0 +1,32 @@
+version: "3"
+services:
+    api:
+        image: itsranjithkumar/fastapi
+        depends_on:
+            - postgres
+        ports:
+            - 80:8000
+        # volumes:
+        #     - ./:/usr/src/app:ro
+        # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    # env_file:
+    #     - ./.env
+        environment:
+        -  DATABASE_HOSTNAME=$(DATABASE_HOSTNAME)
+        -  DATABASE_PORT=$(DATABASE_HOSTNAME)
+        -  DATABASE_PASSWORD=$(DATABASE_HOSTNAME)
+        -  DATABASE_NAME=$(DATABASE_HOSTNAME)
+        -  DATABASE_USERNAME=$(DATABASE_HOSTNAME)
+        -  SECRET_KEY=$(DATABASE_HOSTNAME)
+        -  ALGORITHM=$(DATABASE_HOSTNAME)
+        -  ACCESS_TOKEN_EXPIRE_MINUTES=$(DATABASE_HOSTNAME)
+
+    postgres:
+      image: postgres
+      environment:
+         - POSTGRES_PASSWORD=$(DATABASE_HOSTNAME)
+         - POSTGRES_DB=$(DATABASE_HOSTNAME)
+
+      volumes:
+         - postgres-db:/var/lib/postgresql/data
+
