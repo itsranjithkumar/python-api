@@ -35,8 +35,9 @@ limit: int = 10, skip: int = 0, search: Optional [str] = ""):
     # posts = db.query(models.post).filter(models.post.title.contains(search)).limit(limit).offset(skip).all()
     print("bbbbbbbbbbbbbbbbbbbb")
 
-    posts = db.query(models.post, func.count(models.Votes.post_id).label("votes")).join(models.Votes, models.Votes.post_id == models.post.id, isouter=True).group_by(models.post.id).filter
-    (models.post.title.contains(search)).limit(limit).offset(skip).all()
+    posts = db.query(models.post,func.count(models.Votes.post_id).label("votes")).join(
+         models.Votes,models.Votes.post_id== models.post.id,isouter=True ).group_by(models.post.id).filter(models.post.title.contains(search)).limit(limit).offset(skip).all()
+    
     print("cccccccccccccccccc")
    
    

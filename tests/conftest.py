@@ -7,6 +7,7 @@ from app.main import app
 from app.config import settings
 from app.database import get_db
 from app.database import Base
+from app.oauth2 import create_access_token
 from alembic import command
 
 # SQLALCHEMY_DATABASE_URL = f'postgresql://itsranjithkumar:password@localhost:5432/fastapi_test'
@@ -58,3 +59,16 @@ def test_user(client):
       new_user = res.json()
       new_user['password'] = user_data['password']
       return new_user
+
+@pytest.fixture
+def token(test_user):
+    return create_access_token({"user_id":test_user['id']})
+
+@pytest.fixture
+def authorized_client(client, token):
+     client.headers = {
+         **client.headers,
+         "Authorization": f"Bearer {token}"
+     }
+
+     return client
