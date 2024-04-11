@@ -34,14 +34,11 @@ class post(postBase):
         orm_mode = True
 
 
-class postOut(postBase):
-    id: int 
-    created_at: datetime
-    owner_id: int
-    owner: UserOut
-
-class config:
-    orm_mode = True
+class postOut(BaseModel):
+    post: post
+    votes: int
+    class Config:
+        orm_mode = True
 
 
 
